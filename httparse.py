@@ -17,6 +17,15 @@ class Request:
         self.protocol = ""
         self.headers = {}
 
+    def __eq__(self, other):
+        return self.method == other.method and \
+               self.path == other.path and \
+               self.protocol == other.protocol and \
+               self.headers == other.headers
+
+    def __ne__(self, other):
+        return not (self == other)
+
     def parse(self, data: str):
         init_line, _, other = data.partition('\n')
         self.method, self.path, self.protocol = init_line.split(' ')
@@ -32,13 +41,11 @@ class Response:
     def __init__(self):
         self.protocol = ""
         self.status: int = 0
-        self.status_verbose = ""
         self.headers = {}
         self.data = ""
 
     def __str__(self):
-        self.status_verbose = RESPONSE_VERBOSE_ANSWERS[self.status]
-        init_line = ' '.join([self.protocol, str(self.status), self.status_verbose])
+        init_line = ' '.join([self.protocol, str(self.status), RESPONSE_VERBOSE_ANSWERS[self.status]])
         headerlines = '\n'.join(
             list(map(lambda x: ': '.join(list(map(str, x))), zip(self.headers.keys(), self.headers.values()))))
         return "{}\n{}\n\r\n{}".format(init_line, headerlines, self.data)
@@ -56,9 +63,6 @@ User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
 
     req = Request()
     req.parse(package)
-    # pp.pprint(package.partition('\n'))
-    # pp.pprint(package.split('\n'))
-    # pp.pprint(req)
     resp = Response()
     resp.status = 200
     resp.protocol = "HTTP/1.1"
