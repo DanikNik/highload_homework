@@ -1,4 +1,6 @@
 from httparse import Request, Response
+from datetime import datetime
+from pytz import timezone
 
 
 def handle_request(req: Request):
@@ -14,9 +16,16 @@ def handle_request(req: Request):
 def make_response(put_data: bool):
     resp = Response(headers={
         "Server": "pinx",
+        "Date": timezone('Europe/Moscow').localize(datetime.now()).strftime("%a, %d %b %Y %H:%M:%S %Z")
     })
     return resp
 
 
 def read_file(filename):
     pass
+
+
+if __name__ == "__main__":
+    date_naive_object = datetime.now()
+    datetime_obj_pacific = timezone('Europe/Moscow').localize(date_naive_object)
+    print(datetime_obj_pacific.strftime("%a, %d %b %Y %H:%M:%S %Z"))
