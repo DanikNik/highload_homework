@@ -1,22 +1,24 @@
 import asyncio
+from httparse import Request, Response
+from handler import handle_request
 
 
-async def handle_echo(reader, writer):
-    data = await reader.read(100)
-    message = data.decode()
-    addr = writer.get_extra_info('peername')
-    print("Received %r from %r" % (message, addr))
-    # await asyncio.sleep(3)
-    print("Send: %r" % message)
-    writer.write(data)
+async def handle_client(reader, writer):
+    data_in = await reader.read(100)
+    message = data_in.decode()
+    # addr = writer.get_extra_info('peername')
+
+    request = Request()
+    request.parse(message)
+    resp = handle_request(request)
+    data_out = bytes(resp.to_string(), encoding="UTF-8")
+    writer.write(data_out)
     await writer.drain()
-
-    print("Close the client socket")
     writer.close()
 
 
 loop = asyncio.get_event_loop()
-coro = asyncio.start_server(handle_echo, '127.0.0.1', 8888, loop=loop)
+coro = asyncio.start_server(handle_client, '127.0.0.1', 8888, loop=loop)
 server = loop.run_until_complete(coro)
 
 # Serve requests until Ctrl+C is pressed
