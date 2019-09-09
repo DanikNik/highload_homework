@@ -16,7 +16,7 @@ MIME_TYPES = {
     "jpg": "image/jpeg",
     "jpeg": "image/jpeg",
     "png": "image/png",
-    "gif": "imae/gif",
+    "gif": "image/gif",
     "swf": "application/x-shockwave-flash",
 }
 
@@ -27,6 +27,7 @@ class Request:
         self.path = ""
         self.protocol = ""
         self.headers = {}
+        self.query_arguments = {}
 
     # def __eq__(self, other):
     #     return self.method == other.method and \
@@ -40,14 +41,27 @@ class Request:
     def parse(self, data: str):
         try:
             init_line, _, other = data.partition('\r\n')
-            self.method, self.path, self.protocol = init_line.split(' ')
+            self.method, query_string, self.protocol = init_line.split(' ')
+
+            try:
+                self.path, query_args = query_string.split('?')
+                self.query_arguments = dict(
+                    map(
+                        lambda x: x.split('='),
+                        query_args.split('&')
+                    )
+                )
+            except ValueError:
+                self.path = query_string
+
             self.headers = dict(
                 map(
                     lambda x: x.split(": "),
                     other.partition('\r\n\r\n')[0].strip('\r\n ').split("\r\n")
                 )
             )
-        except:
+            return
+        except ValueError:
             pass
 
 
@@ -86,7 +100,7 @@ User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\r
     pack = "GET / HTTP/1.1\r\n"
 
     req = Request()
-    req.parse(pack)
+    req.parse(package)
     # resp = Response()
     # resp.status = 200
     # resp.protocol = "HTTP/1.1"

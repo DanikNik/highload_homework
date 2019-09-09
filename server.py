@@ -4,7 +4,7 @@ from handler import handle_request
 
 
 async def handle_client(reader, writer):
-    data_in = await reader.read(100)
+    data_in = await reader.read(512)
     message = data_in.decode()
     # addr = writer.get_extra_info('peername')
 

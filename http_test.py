@@ -4,7 +4,7 @@ from httparse import Request, Response
 
 class RequestTests(unittest.TestCase):
     def test_request_parse(self):
-        package = '''GET /docs/index.html HTTP/1.1\r
+        package = '''GET /docs/index.html?a=12&b=qwe HTTP/1.1\r
 Host: www.nowhere123.com\r
 Accept: image/gif, image/jpeg, */*\r
 Accept-Language: en-us\r
@@ -26,10 +26,15 @@ User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\r
             "Accept-Encoding": "gzip, deflate",
             "User-Agent": "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)",
         }
+        equal_req.query_arguments = {
+            "a": "12",
+            "b": "qwe",
+        }
         self.assertEqual(test_req.method, equal_req.method)
         self.assertEqual(test_req.path, equal_req.path)
         self.assertEqual(test_req.protocol, equal_req.protocol)
         self.assertEqual(test_req.headers, equal_req.headers)
+        self.assertEqual(test_req.query_arguments, equal_req.query_arguments)
 
 
 class ResponseTests(unittest.TestCase):
