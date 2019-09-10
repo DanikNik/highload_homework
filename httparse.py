@@ -46,7 +46,7 @@ class Response:
                  protocol: str = "HTTP/1.1",
                  status: int = 200,
                  headers: dict = None,
-                 data: str = ""):
+                 data: bytes = b""):
         if headers is None:
             headers = {}
         self.protocol = protocol
@@ -62,10 +62,10 @@ class Response:
         init_line = ' '.join([self.protocol, str(self.status), RESPONSE_VERBOSE_ANSWERS[self.status]])
         headerlines = '\r\n'.join(
             list(map(lambda x: ': '.join(list(map(str, x))), zip(self.headers.keys(), self.headers.values()))))
-        if not self.is_binary:
-            return "{}\r\n{}\r\n\r\n{}".format(init_line, headerlines, self.data)
-        else:
-            return "{}\r\n{}\r\n\r\n".format(init_line, headerlines)
+        # if not self.is_binary:
+        #     return "{}\r\n{}\r\n\r\n{}".format(init_line, headerlines, self.data)
+        # else:
+        return "{}\r\n{}\r\n\r\n".format(init_line, headerlines)
 
 
 if __name__ == "__main__":

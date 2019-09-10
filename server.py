@@ -13,8 +13,8 @@ async def handle_client(reader, writer):
     resp = handle_request(request)
     data_out = bytes(resp.to_string(), encoding="UTF-8")
     writer.write(data_out)
-    if resp.is_binary:
-        writer.write(resp.data)
+    # if resp.is_binary:
+    writer.write(resp.data)
     await writer.drain()
     writer.close()
 
