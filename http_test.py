@@ -3,7 +3,7 @@ from httparse import Request, Response
 
 
 class RequestTests(unittest.TestCase):
-    def test_request_parse(self):
+    def test_request_parse_complex(self):
         package = '''GET /docs/index.html?a=12&b=qwe HTTP/1.1\r
 Host: www.nowhere123.com\r
 Accept: image/gif, image/jpeg, */*\r
@@ -36,10 +36,24 @@ User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\r
         self.assertEqual(test_req.headers, equal_req.headers)
         self.assertEqual(test_req.query_arguments, equal_req.query_arguments)
 
+    def test_request_no_queryargs(self):
+        package = '''GET /docs/index.html HTTP/1.1\r
+        Host: www.nowhere123.com\r
+        Accept: image/gif, image/jpeg, */*\r
+        Accept-Language: en-us\r
+        Accept-Encoding: gzip, deflate\r
+        User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\r
+        \r\n'''
+
+        test_req = Request()
+        test_req.parse(package)
+
+        self.assertEqual(test_req.path, "/docs/index.html")
+
 
 class ResponseTests(unittest.TestCase):
     def test_response_to_string(self):
-        equal_resp_text = """HTTP/1.1 200 OK\r
+        equal_resp_text = b"""HTTP/1.1 200 OK\r
 Server: Apache/2.2.14 (Win32)\r
 ETag: "10000000565a5-2c-3e94b66c2e680"\r
 Accept-Ranges: bytes\r
@@ -59,8 +73,8 @@ Content-Type: text/html\r
             'Connection': 'close',
             'Content-Type': 'text/html',
         }
-        test_resp.data = "<html><body><h1>It works!</h1></body></html>"
-        self.assertEqual(test_resp.to_string(), equal_resp_text)
+        test_resp.data = b"<html><body><h1>It works!</h1></body></html>"
+        self.assertEqual(bytes(test_resp.to_string(), "UTF-8") + test_resp.data, equal_resp_text)
 
 
 if __name__ == '__main__':
