@@ -53,7 +53,6 @@ class Response:
         self.status = status
         self.headers = headers
         self.data = data
-        self.is_binary = False
 
     def __str__(self):
         return self.to_string()
@@ -62,9 +61,6 @@ class Response:
         init_line = ' '.join([self.protocol, str(self.status), RESPONSE_VERBOSE_ANSWERS[self.status]])
         headerlines = '\r\n'.join(
             list(map(lambda x: ': '.join(list(map(str, x))), zip(self.headers.keys(), self.headers.values()))))
-        # if not self.is_binary:
-        #     return "{}\r\n{}\r\n\r\n{}".format(init_line, headerlines, self.data)
-        # else:
         return "{}\r\n{}\r\n\r\n".format(init_line, headerlines)
 
 

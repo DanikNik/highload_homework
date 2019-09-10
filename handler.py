@@ -56,14 +56,9 @@ def make_response(req: Request, put_data: bool):
         return resp
 
     if os.path.exists(filepath):
-        ext = filepath.split('.')[-1].lower()
-        # if ext in ["jpeg", "jpg", "gif", "swf", "png"]:
-        #     resp.is_binary = True
+        ext = str(filepath).split('.')[-1].lower()
         with open(filepath, "rb") as f:
             data = f.read()
-        # else:
-        #     with open(filepath, "r") as f:
-        #         data = f.read()
     else:
         if aware_dir_enum:
             resp.status = 403
