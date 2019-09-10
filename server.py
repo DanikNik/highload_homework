@@ -13,12 +13,14 @@ async def handle_client(reader, writer):
     resp = handle_request(request)
     data_out = bytes(resp.to_string(), encoding="UTF-8")
     writer.write(data_out)
+    if resp.is_binary:
+        writer.write(resp.data)
     await writer.drain()
     writer.close()
 
 
 loop = asyncio.get_event_loop()
-coro = asyncio.start_server(handle_client, '127.0.0.1', 8888, loop=loop)
+coro = asyncio.start_server(handle_client, '127.0.0.1', 8000, loop=loop)
 server = loop.run_until_complete(coro)
 
 # Serve requests until Ctrl+C is pressed

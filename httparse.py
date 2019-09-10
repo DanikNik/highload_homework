@@ -1,23 +1,8 @@
-status_ok = 200
-status_notfound = 404
-status_forbidden = 403
-status_method_not_allowed = 405
 RESPONSE_VERBOSE_ANSWERS = {
     200: "OK",
     403: "Forbidden",
     404: "Not Found",
     405: "Method Not Allowed",
-}
-
-MIME_TYPES = {
-    "html": "text/html",
-    "css": "text/css",
-    "js": "application/javascript",
-    "jpg": "image/jpeg",
-    "jpeg": "image/jpeg",
-    "png": "image/png",
-    "gif": "image/gif",
-    "swf": "application/x-shockwave-flash",
 }
 
 
@@ -28,15 +13,6 @@ class Request:
         self.protocol = ""
         self.headers = {}
         self.query_arguments = {}
-
-    # def __eq__(self, other):
-    #     return self.method == other.method and \
-    #            self.path == other.path and \
-    #            self.protocol == other.protocol and \
-    #            self.headers == other.headers
-    #
-    # def __ne__(self, other):
-    #     return not (self == other)
 
     def parse(self, data: str):
         try:
@@ -77,6 +53,7 @@ class Response:
         self.status = status
         self.headers = headers
         self.data = data
+        self.is_binary = False
 
     def __str__(self):
         return self.to_string()
@@ -85,7 +62,10 @@ class Response:
         init_line = ' '.join([self.protocol, str(self.status), RESPONSE_VERBOSE_ANSWERS[self.status]])
         headerlines = '\r\n'.join(
             list(map(lambda x: ': '.join(list(map(str, x))), zip(self.headers.keys(), self.headers.values()))))
-        return "{}\r\n{}\r\n\r\n{}".format(init_line, headerlines, self.data)
+        if not self.is_binary:
+            return "{}\r\n{}\r\n\r\n{}".format(init_line, headerlines, self.data)
+        else:
+            return "{}\r\n{}\r\n\r\n".format(init_line, headerlines)
 
 
 if __name__ == "__main__":
