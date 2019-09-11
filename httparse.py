@@ -54,10 +54,10 @@ class Response:
         self.headers = headers
         self.data = data
 
-    def __str__(self):
-        return self.to_string()
+    def __str__(self) -> str:
+        return self.headers_to_string()
 
-    def to_string(self):
+    def headers_to_string(self) -> str:
         init_line = ' '.join([self.protocol, str(self.status), RESPONSE_VERBOSE_ANSWERS[self.status]])
         headerlines = '\r\n'.join(
             list(map(lambda x: ': '.join(list(map(str, x))), zip(self.headers.keys(), self.headers.values()))))

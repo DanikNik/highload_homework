@@ -74,7 +74,7 @@ Content-Type: text/html\r
             'Content-Type': 'text/html',
         }
         test_resp.data = b"<html><body><h1>It works!</h1></body></html>"
-        self.assertEqual(bytes(test_resp.to_string(), "UTF-8") + test_resp.data, equal_resp_text)
+        self.assertEqual(bytes(test_resp.headers_to_string(), "UTF-8") + test_resp.data, equal_resp_text)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,2 @@
+FROM python:latest
+ENV PY_NGINX_CONFIG_PATH
