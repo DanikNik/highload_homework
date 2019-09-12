@@ -3,9 +3,7 @@ import socket
 
 import uvloop as uvloop
 
-import config
 from httparse import Request, Response
-# from handler import handle_request
 from datetime import datetime
 from pytz import timezone
 from pathlib import Path
@@ -39,7 +37,6 @@ class Worker:
         self.sock = sock
         self.config_data = config_data
 
-    # @asyncio.coroutine
     async def handle_client(self, conn: socket.socket):
         data_in = await self.loop.sock_recv(conn, 512)
         message = data_in.decode()

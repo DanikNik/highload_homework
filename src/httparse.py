@@ -62,29 +62,3 @@ class Response:
         headerlines = '\r\n'.join(
             list(map(lambda x: ': '.join(list(map(str, x))), zip(self.headers.keys(), self.headers.values()))))
         return "{}\r\n{}\r\n\r\n".format(init_line, headerlines)
-
-
-if __name__ == "__main__":
-    package = '''GET /docs/index.html HTTP/1.1\r
-Host: www.nowhere123.com\r
-Accept: image/gif, image/jpeg, */*\r
-Accept-Language: en-us\r
-Accept-Encoding: gzip, deflate\r
-User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\r
-\r\n'''
-
-    pack = "GET / HTTP/1.1\r\n"
-
-    req = Request()
-    req.parse(package)
-    # resp = Response()
-    # resp.status = 200
-    # resp.protocol = "HTTP/1.1"
-    # resp.headers = {
-    #     "Content-Length": "44",
-    #     "Content-Type": "text/html"
-    # }
-    # resp.data = "SOME CHUNK"
-    # al = str(resp)
-    # print(al)
-    pass
